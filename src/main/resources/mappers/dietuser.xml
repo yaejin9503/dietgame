@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="global.sesoc.test303.dao.DietMapper">
+
+	<select id="loginUser" parameterType="User" resultType="User">
+		select
+		userid, password
+		from diet_user
+		where userid = #{userid} and
+		password = #{password}
+	</select>
+
+	<select id="homeinfo" parameterType="String" resultType="User">
+		select
+		gender,
+		height,
+		weight,
+		age,
+		hopeweight
+		from diet_user
+		where userid = #{userid}
+	</select>
+
+	<select id="showfood" resultType="Food">
+		select food_name,
+		food_num,
+		cal,
+		originalfile
+		from
+		food
+	</select>
+
+	<select id="searchfood" parameterType="String" resultType="Food">
+		select food_name,
+		food_num,
+		cal,
+		originalfile
+		from
+		food
+		where food_name like '%'|| #{food_name} ||'%'
+
+	</select>
+
+	<insert id="insertdiary" parameterType="Diary1">
+		insert into diary1(
+		userid,
+		food_num,
+		day,
+		todaytime
+		)
+		values(
+		#{userid},
+		#{food_num},
+		sysdate,
+		#{todaytime}
+
+		)
+	</insert>
+
+	<select id="showmydiary" parameterType="Diary1" resultType="Food">
+		select
+		food.food_num,food.food_name, food.originalfile,food.cal
+		from
+		food, diary1
+		where
+		food.food_num = diary1.food_num
+		and diary1.todaytime =#{todaytime}
+		and diary1.userid = #{userid}
+		and to_char( diary1.day, 'yyyymmdd') = to_char( sysdate, 'yyyymmdd')
+	</select>
+
+
+	<delete id="deletemyfood" parameterType="Diary1">
+		delete from diary1
+		where todaytime =#{todaytime}
+		and userid = #{userid}
+		and food_num = #{food_num}
+	</delete>
+
+	<select id="todayfoodreport" resultType="Food" parameterType="String">
+		select food.cal, food.portein, food.fat, food.carb, food.sugar,
+		food.na
+		from diary1 , food
+		where food.food_num = diary1.food_num and
+		to_char( diary1.day, 'yyyymmdd') =
+		to_char( sysdate, 'yyyymmdd')
+		and userid = #{userid}
+	</select>
+
+
+	<select id="showexercise" resultType="Exercise">
+		select exernum,
+		exername,
+		calburn,
+		originalfile
+		from
+		exercise
+	</select>
+
+	<select id="searchexer" parameterType="String" resultType="Exercise">
+		select exernum,
+		exername,
+		calburn,
+		originalfile
+		from
+		exercise
+		where exername like '%'|| #{exername} ||'%'
+	</select>
+
+	<insert id="insertdiary2" parameterType="Diary2">
+		insert into diary2(
+		userid,
+		exernum,
+		exerdate
+		)
+		values(
+		#{userid},
+		#{exernum},
+		sysdate
+		)
+	</insert>
+
+	<select id="showmydiary2" parameterType="String" resultType="Exercise">
+		select
+		exercise.exernum,exercise.exername, exercise.originalfile
+		from
+		exercise, diary2
+		where
+		exercise.exernum = diary2.exernum
+		and diary2.userid = #{userid}
+		and diary2.totaltime IS NULL
+		and to_char( diary2.exerdate, 'yyyymmdd') = to_char( sysdate, 'yyyymmdd')
+	</select>
+
+	<update id="updatetime" parameterType="Diary2">
+		update diary2 set totaltime=#{totaltime}
+		where
+		userid =#{userid}
+		and exernum =#{exernum}
+		and to_char( exerdate, 'yyyymmdd') = to_char( sysdate, 'yyyymmdd')
+	</update>
+
+	<select id="showmydiary3" parameterType="String" resultType="Exercise">
+		select
+		exercise.exernum,exercise.exername, exercise.originalfile,
+		diary2.totaltime
+		from
+		exercise, diary2
+		where
+		exercise.exernum = diary2.exernum
+		and diary2.userid = #{userid}
+		and diary2.totaltime IS NOT NULL
+		and to_char( diary2.exerdate, 'yyyymmdd') = to_char( sysdate, 'yyyymmdd')
+	</select>
+
+	<select id="totalburnkcal" parameterType="String" resultType="Diary2">
+		select 
+			diet_user.weight, diary2.totaltime ,exercise.calburn
+		from 
+			diet_user, diary2, exercise
+		where 
+			diet_user.userid = diary2.userid
+			and exercise.exernum = diary2.exernum
+			and to_char( diary2.exerdate, 'yyyymmdd') = to_char( sysdate, 'yyyymmdd')
+			and diary2.userid = #{userid}
+	</select>
+	
+	<delete id="deleteexercise" parameterType="Diary2">
+		delete from diary2
+		where userid = #{userid}
+		and exernum = #{exernum}
+	</delete>
+    
+    <insert id="insertuser" parameterType="User">
+	   insert into diet_user(
+		   userid
+		   ,gender
+		   ,password
+		   ,height
+		   ,weight
+		   ,age
+		   ,hopeweight
+		   ,salt
+	   )
+	   values(
+		   #{userid}
+		   ,#{gender}
+		   ,#{password}
+		   ,#{height}
+		   ,#{weight}
+		   ,#{age}
+		   ,#{hopeweight}
+		   ,#{salt}
+	   )
+    </insert>
+   
+	<select id="checkid" parameterType="String" resultType="String">
+		select * from diet_user where userid=#{userid}
+	</select>
+	
+	<insert id="insertweight" parameterType="Weight">
+      insert into Weight(
+	      userid,
+	      weight,
+	      day
+      )	
+      values(
+	      #{userid},
+	      #{weight},
+	      TO_CHAR(trunc(SYSDATE), 'yyyymmdd')
+      )
+   </insert>
+   
+   <select id="todayweightreport" resultType="Weight" parameterType="String">
+      select userid, weight, to_date(day,'yyyymmdd') as "day"
+      from weight
+      where userid = #{userid}
+      order by day asc
+   </select>
+   
+   <select id="oneday" parameterType="Diary1" resultType="Food">   
+   select
+      food.cal, food.food_name, food.originalfile, diary1.todaytime      
+   from 
+      diary1, food
+   where
+      diary1.food_num = food.food_num
+      and diary1.userid=#{userid}
+      and to_char( diary1.day, 'yyyy-mm-dd') = #{day}   
+   order by
+      todaytime desc      
+   </select>
+   
+   <select id="foodcheck"  parameterType="String" resultType="Diary1">
+	select distinct
+		todaytime
+	from
+		diary1
+	where
+		userid=#{userid} and
+		to_char( day, 'yyyymmdd') = to_char( sysdate, 'yyyymmdd')    
+   </select>
+   
+   
+   <select id="exerciseday" parameterType="Diary2" resultType="Exercise">   
+   select
+      exercise.calburn, exercise.exername, exercise.originalfile, diary2.totaltime      
+   from 
+      diary2, exercise
+   where
+      diary2.exernum = exercise.exernum
+      and diary2.userid=#{userid}
+      and to_char( diary2.exerdate, 'yyyy-mm-dd') = #{exerdate} 
+   </select>
+   
+    <update id="updateweight" parameterType="User">
+      update diet_user set weight=#{weight}
+      where
+      userid = #{userid}
+   </update>
+   
+   <select id="confirmweight" parameterType="String" resultType="Weight">
+	select
+		to_date(day,'yyyy-mm-dd')as "day"
+	from
+		weight
+	where
+		userid = #{userid}
+		and to_date(day,'yyyy/mm/dd') <![CDATA[ > ]]>sysdate-1
+   </select>
+   
+   <select id ="getSaltById" parameterType="String" resultType ="String">
+   	select 
+   		salt 
+   	from 
+   		diet_user 
+   	where 
+   		userid = #{userid}
+   </select>
+   
+   <select id="getBestScore" parameterType="String" resultType="int">
+   		select 
+   			score from minigame 
+   		where 
+   			userid=#{userid}
+   </select>
+   
+   <update id="updateBestScore" parameterType="Minigame">
+   		update minigame set score = #{score}
+   		where userid = #{userid}
+   </update>
+   
+   <insert id ="insertscore" parameterType="Minigame">
+   	insert into minigame (
+   		score, 
+   		userid 
+   	)values(
+   		#{score},
+   		#{userid}
+   	)
+   </insert>
+   
+</mapper>

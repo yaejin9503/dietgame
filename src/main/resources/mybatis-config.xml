@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<typeAliases>
+		<typeAlias type="global.sesoc.test303.vo.Diet_user" alias="User" />
+		<typeAlias type="global.sesoc.test303.vo.Diet_user_security" alias="UserSecurity" />
+		<typeAlias type="global.sesoc.test303.vo.Food" alias="Food" />
+		<typeAlias type="global.sesoc.test303.vo.Diary1" alias="Diary1" />
+		<typeAlias type="global.sesoc.test303.vo.Exercise" alias="Exercise" />
+		<typeAlias type="global.sesoc.test303.vo.Diary2" alias="Diary2" />
+		<typeAlias type="global.sesoc.test303.vo.Weight" alias="Weight" />
+		<typeAlias type="global.sesoc.test303.vo.Minigame" alias="Minigame" />
+		
+	</typeAliases>
+	   
+	<mappers>
+		<mapper resource="mappers/dietuser.xml" />
+	</mappers>
+</configuration>
+
