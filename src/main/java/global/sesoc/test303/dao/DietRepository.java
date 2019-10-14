@@ -1,4 +1,4 @@
-package global.sesoc.test303.util;
+package global.sesoc.test303.dao;
 
 import java.util.List;
 
@@ -6,7 +6,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import global.sesoc.test303.dao.DietMapper;
 import global.sesoc.test303.vo.Diary1;
 import global.sesoc.test303.vo.Diary2;
 import global.sesoc.test303.vo.Diet_user;
